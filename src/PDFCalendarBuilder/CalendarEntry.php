@@ -22,7 +22,7 @@ class CalendarEntry {
             string $message, array $textColor,
             array $bgColor)
     {
-        $this->day= $startDate->format("d");
+        $this->day= intval($startDate->format("d"));
         $this->startDate= $startDate;
         $this->endDate= $endDate;
         $this->message= $message;

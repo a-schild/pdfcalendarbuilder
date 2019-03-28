@@ -118,12 +118,14 @@ class CalendarBuilder {
                 'UTF-8', false);
         $this->pdf->setPrintHeader(false);
         $this->pdf->setPrintFooter(false);
+        $this->pdf->setTitle($this->getTitle($this->title));
         // set default monospaced font
         $this->pdf->SetDefaultMonospacedFont('helvetica');
         $this->pdf->setRightMargin($this->marginRight);
         $this->pdf->setLeftMargin($this->marginLeft);
         $this->pdf->setTopMargin($this->marginTop);
         //$this->pdf->setBottomMargin(0);
+        
         $this->pdf->SetAutoPageBreak(false);
         $this->pdf->AddPage();
     }
@@ -148,7 +150,7 @@ class CalendarBuilder {
         $this->pdf->SetTextColor(0, 0, 0);
         $this->pdf->SetFont($this->titleFont, 'B', $this->titleFontSize);
         $this->pdf->Cell(0, $this->titleFontSize * 0.7,
-                $this->title . ' - ' . $this->monthNames[$this->month - 1] . ' ' . $this->date["year"],
+                $this->getTitle(),
                 0, 0, 'C');
         $this->pdf->Ln();
         $this->pdf->SetFillColor(128, 128, 128);
@@ -207,20 +209,21 @@ class CalendarBuilder {
         $this->gridIsDrawn = true;
     }
 
-    public function addEntry(int $day, \DateTime $startDate, \DateTime $endDate, string $message,
+    public function addEntry(\DateTime $startDate, \DateTime $endDate, string $message,
             string $htmlcolor = '#000000',
             string $htmlBackgroundColor = '#ffffff'): void {
         $textColor = ColorNames::html2rgb($htmlcolor);
         $bgColor = ColorNames::html2rgb($htmlBackgroundColor);
 
-        $this->storeEntry($day, $startDate, $endDate, $message, $textColor, $bgColor);
+        $this->storeEntry($startDate, $endDate, $message, $textColor, $bgColor);
     }
 
-    protected function storeEntry(int $day, \DateTime $startDate, \DateTime $endDate,
+    protected function storeEntry(\DateTime $startDate, \DateTime $endDate,
             string $message, array $textColor,
             array $bgColor): void {
 
-        $ce = new CalendarEntry($day, $startDate, $endDate, $message, $textColor, $bgColor);
+        $ce = new CalendarEntry($startDate, $endDate, $message, $textColor, $bgColor);
+        $day= $startDate->format("d");
         array_push($this->dayEntries[$day - 1]["entries"], $ce);
     }
 
@@ -266,10 +269,19 @@ class CalendarBuilder {
         $this->dayEntries[$calendarEntry->getDay() - 1]["Y"] = $this->pdf->GetY();
     }
 
-    function addEntryCategory(int $day, DateTime $startDate, string $message,
+    /**
+     * Add a calendar entry with the given arguments and the given category
+     * The colors are taken from the previously added category
+     * 
+     * @param \DateTime $startDate
+     * @param \DateTime $endDate
+     * @param string $message
+     * @param type $categoryID
+     * @return void
+     */
+    function addEntryCategory(\DateTime $startDate, \DateTime $endDate, string $message,
             $categoryID): void {
-        $this->addEntry($day, $startDate, $message,
-                $this->categories[$categoryID]["textColor"],
+        $this->storeEntry($startDate, $endDate, $message, $this->categories[$categoryID]["textColor"],
                 $this->categories[$categoryID]["bgColor"]);
     }
 
@@ -647,4 +659,12 @@ class CalendarBuilder {
         return $this->pdf->getPageWidth();
     }
 
+    /**
+     * 
+     * @return string title to be printed on top of the calendar
+     */
+    protected function getTitle():string
+    {
+        return $this->title . ' - ' . $this->monthNames[$this->month - 1] . ' ' . $this->date["year"];
+    }
 }
