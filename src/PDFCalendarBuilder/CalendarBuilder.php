@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace PDFCalendarBuilder;
+namespace aschild\PDFCalendarBuilder;
 
 /**
  * CalendarBuilder
@@ -15,9 +15,6 @@ namespace PDFCalendarBuilder;
  *
  * @author André Schild
  */
-
-require "ColorNames.php";
-require "CalendarEntry.php";
 
 class CalendarBuilder {
 
@@ -32,8 +29,8 @@ class CalendarBuilder {
     private $marginRight = 10;
     private $marginTop = 10;
     private $marginBottom = 10;
-    private $legendHeight= 0;   // Stores the legend height if any
-    private $legendSpacing= 0.0; // Space between calendar and legend (if printed)
+    private $legendHeight = 0;   // Stores the legend height if any
+    private $legendSpacing = 0.0; // Space between calendar and legend (if printed)
     private $date; // The start date of the calendar
     private $days_in_month; // The number of days for the calendar
     private $weekStarts = 0;    // On which day does the week start? 0=Sunday, 1=Monday
@@ -83,7 +80,7 @@ class CalendarBuilder {
     private $categoryFontSize = 10;
     private $footerFont = 'helvetica';
     private $footerFontSize = 8;
-    private $shrinkFontSizeFactor= 0.95; // Reduce the font size by 10% and try once more
+    private $shrinkFontSizeFactor = 0.95; // Reduce the font size by 10% and try once more
 
     /**
      * Create monthly calendar for the given month&year
@@ -150,7 +147,7 @@ class CalendarBuilder {
         $this->pdf->SetFillColor(255, 255, 255);
         $this->pdf->SetTextColor(0, 0, 0);
         $this->pdf->SetFont($this->titleFont, 'B', $this->titleFontSize);
-        $this->pdf->Cell(0, $this->titleFontSize*0.7,
+        $this->pdf->Cell(0, $this->titleFontSize * 0.7,
                 $this->title . ' - ' . $this->monthNames[$this->month - 1] . ' ' . $this->date["year"],
                 0, 0, 'C');
         $this->pdf->Ln();
@@ -160,7 +157,7 @@ class CalendarBuilder {
         /* Render the weekday header */
         $this->pdf->SetFont($this->headerFont, 'B', $this->headerFontSize);
         for ($i = 0; $i < 7; $i++) {
-            $this->pdf->Cell($this->cellWidth, $this->headerFontSize *0.7,
+            $this->pdf->Cell($this->cellWidth, $this->headerFontSize * 0.7,
                     $this->dayNames[($i + $this->weekStarts) % 7], 1, 0, 'C', 1);
         }
         $this->pdf->Ln();
@@ -170,14 +167,13 @@ class CalendarBuilder {
         $cellHeight = ($this->gridHeight) / $num_of_rows;
 
         /* Render the grid */
-        $this->rowHeights= []; // Reset row heights to empty
+        $this->rowHeights = []; // Reset row heights to empty
         $gridTop = $this->pdf->GetY();
         for ($j = 1; $j <= $num_of_rows; $j++) {
-            if ($rowHeights != null)
-            {
-                $cellHeight= $rowHeights[$j];
+            if ($rowHeights != null) {
+                $cellHeight = $rowHeights[$j];
             }
-            $this->rowHeights[$j]= $cellHeight; // Store row height
+            $this->rowHeights[$j] = $cellHeight; // Store row height
             for ($i = 0; $i < 7; $i++) {
                 $this->pdf->Cell($this->cellWidth, $cellHeight, '', 1, 0, 'R');
             }
@@ -189,7 +185,7 @@ class CalendarBuilder {
         /* Render the day numbers */
         $this->pdf->SetTextColor(200, 200, 200);
         $day = 1;
-        $y_offset= $gridTop;
+        $y_offset = $gridTop;
         for ($i = 1; $i <= $num_of_rows; $i++) {
             for ($j = 0; $j < 7; $j++) {
                 if (($i == 1 && $weekday_of_first <= $j) || ($i > 1 && $day <= $this->days_in_month)) {
@@ -197,7 +193,7 @@ class CalendarBuilder {
                     $this->dayEntries[$day - 1]["X"] = $x_offset;
                     $this->dayEntries[$day - 1]["Y"] = $y_offset;
                     $this->dayEntries[$day - 1]["StartY"] = $y_offset;
-                    $cellHeight= $this->rowHeights[$i];
+                    $cellHeight = $this->rowHeights[$i];
                     $this->pdf->SetY($y_offset + $cellHeight - ($this->numberFontSize / 2));
                     $this->pdf->SetX($x_offset);
                     $this->pdf->SetFont($this->numberFont, 'B',
@@ -206,7 +202,7 @@ class CalendarBuilder {
                     $day++;
                 }
             }
-            $y_offset +=$cellHeight;
+            $y_offset += $cellHeight;
         }
         $this->gridIsDrawn = true;
     }
@@ -254,18 +250,17 @@ class CalendarBuilder {
         } else {
             $txt = $startDate->format('G:i');
         }
-        if ($this->printEndTime)
-        {
+        if ($this->printEndTime) {
             $endDate = $calendarEntry->getEndDate();
             if ($endDate != null) {
                 if ($endDate->format('i') == "00") {
-                    $txt .= '-'.$endDate->format('G');
+                    $txt .= '-' . $endDate->format('G');
                 } else {
-                    $txt .= '-'.$endDate->format('G:i');
+                    $txt .= '-' . $endDate->format('G:i');
                 }
             }
         }
-        $txt .= 'h '.$calendarEntry->getMessage();
+        $txt .= 'h ' . $calendarEntry->getMessage();
         $this->pdf->MultiCell($this->cellWidth, 1,
                 $txt, 1, 'L', true);
         $this->dayEntries[$calendarEntry->getDay() - 1]["Y"] = $this->pdf->GetY();
@@ -278,8 +273,7 @@ class CalendarBuilder {
                 $this->categories[$categoryID]["bgColor"]);
     }
 
-    protected function drawGridWithEntries(?array $newRowHeights):void
-    {
+    protected function drawGridWithEntries(?array $newRowHeights): void {
         $this->drawGrid($newRowHeights);
         foreach ($this->dayEntries as $days) {
             foreach ($days["entries"] as $entry) {
@@ -287,73 +281,53 @@ class CalendarBuilder {
             }
         }
     }
-    
+
     /**
      * Now generate the calendar
      */
     public function buildCalendar() {
         $this->pdf->startTransaction();  // We do a rollback if needed to change row heights
         $this->drawGridWithEntries(null);
-        if (!($this->resizeRowHeightsIfNeeded || $this->shrinkFontSizeIfNeeded) && $this->checkContentInsideDayBoxes())
-        {
+        if (!($this->resizeRowHeightsIfNeeded || $this->shrinkFontSizeIfNeeded) && $this->checkContentInsideDayBoxes()) {
             // OK, everything inside the boxes, or no dynamic adapting
             $this->pdf->commitTransaction();
-        }
-        else
-        {
+        } else {
             $this->pdf->rollbackTransaction(true);
-            $oneMoreTry= true;
-            while ($oneMoreTry)
-            {
+            $oneMoreTry = true;
+            while ($oneMoreTry) {
                 // Now we check the row heights, perhaps we can do something here
-                if ($this->resizeRowHeightsIfNeeded)
-                {
-                    $newRowHeights= $this->checkRowHeights();
-                    if ($newRowHeights != null)
-                    {
+                if ($this->resizeRowHeightsIfNeeded) {
+                    $newRowHeights = $this->checkRowHeights();
+                    if ($newRowHeights != null) {
                         $this->drawGridWithEntries($newRowHeights);
-                        $oneMoreTry= false;
-                    }
-                    else
-                    {
-                        if ($this->shrinkFontSizeIfNeeded)
-                        {
+                        $oneMoreTry = false;
+                    } else {
+                        if ($this->shrinkFontSizeIfNeeded) {
                             $this->pdf->startTransaction();  // We do a rollback if needed to change row heights
-                            $this->eventFontSize= $this->eventFontSize * $this->shrinkFontSizeFactor;
+                            $this->eventFontSize = $this->eventFontSize * $this->shrinkFontSizeFactor;
                             $this->drawGridWithEntries(null);
-                        }
-                        else
-                        {
+                        } else {
                             // No way to fit on page
                             $this->drawGridWithEntries(null);
-                            $oneMoreTry= false;
+                            $oneMoreTry = false;
                         }
                     }
-                }
-                else
-                {
-                    if ($this->shrinkFontSizeIfNeeded)
-                    {
+                } else {
+                    if ($this->shrinkFontSizeIfNeeded) {
                         $this->pdf->startTransaction();  // We do a rollback if needed to change row heights
-                        $this->fontSize= $this->fontSize * $this->shrinkFontSizeFactor;
+                        $this->fontSize = $this->fontSize * $this->shrinkFontSizeFactor;
                         $this->drawGridWithEntries(null);
-                    }
-                    else
-                    {
+                    } else {
                         // No way to fit on page
                         $this->drawGridWithEntries(null);
-                        $oneMoreTry= false;
+                        $oneMoreTry = false;
                     }
                 }
-                if ($oneMoreTry)
-                {
-                    if ($this->checkContentInsideDayBoxes())
-                    {
+                if ($oneMoreTry) {
+                    if ($this->checkContentInsideDayBoxes()) {
                         $this->pdf->commitTransaction();
-                        $oneMoreTry= false;
-                    }
-                    else
-                    {
+                        $oneMoreTry = false;
+                    } else {
                         $this->pdf->rollbackTransaction(true);
                     }
                 }
@@ -415,21 +389,19 @@ class CalendarBuilder {
         $nCategories = count($this->categories);
         $catCols = min($nCategories, 7);
         $catRows = ceil(count($this->categories) / $catCols); // Number of rows to use for categories legend
-        $rowHeights= array();
-        for ($i=1; $i <= $catRows; $i++)
-        {
-            $rowHeights[$i]= $this->categoryFontSize / 3;
+        $rowHeights = array();
+        for ($i = 1; $i <= $catRows; $i++) {
+            $rowHeights[$i] = $this->categoryFontSize / 3;
         }
-        $rowHeightsReal= array();
-        $legendHeight= 0;
-        for ($i=1; $i <= $catRows; $i++)
-        {
-            $rowHeightsReal[$i]= $rowHeights[$i];
-            $legendHeight+= $rowHeights[$i];
+        $rowHeightsReal = array();
+        $legendHeight = 0;
+        for ($i = 1; $i <= $catRows; $i++) {
+            $rowHeightsReal[$i] = $rowHeights[$i];
+            $legendHeight += $rowHeights[$i];
         }
         $colPos = 0;
         $rowPos = 1;
-        $rowTop= 0;
+        $rowTop = 0;
         $cellWidth = ($this->pdf->getPageWidth() - $this->marginLeft - $this->marginRight) / $catCols;
         $firstRowPos = $this->pdf->getPageHeight() - $this->marginBottom - $legendHeight;
         $this->pdf->SetFont($this->categoryFont, 'B', $this->categoryFontSize);
@@ -445,31 +417,28 @@ class CalendarBuilder {
             $this->pdf->SetY($firstRowPos + $rowTop);
             $this->pdf->SetX($this->marginLeft + ($cellWidth * $colPos));
             $this->pdf->MultiCell($cellWidth, 1, $catName, 1, 'C', true);
-            $myY= $this->pdf->getY();
-            $myHeight= $myY-($firstRowPos + $rowTop);
-            $rowHeightsReal[$rowPos]= max($rowHeightsReal[$rowPos], $myHeight);
+            $myY = $this->pdf->getY();
+            $myHeight = $myY - ($firstRowPos + $rowTop);
+            $rowHeightsReal[$rowPos] = max($rowHeightsReal[$rowPos], $myHeight);
             $colPos++;
             if ($colPos > $catCols - 1) {
                 $colPos = 0;
-                $rowTop= $rowTop+$rowHeights[$rowPos];
+                $rowTop = $rowTop + $rowHeights[$rowPos];
                 $rowPos++;
             }
         }
-        $needReprint= false;
-        for ($i=1; $i <= $catRows; $i++)
-        {
-            $needReprint= $needReprint || ($rowHeights[$i] <> $rowHeightsReal[$i]);
+        $needReprint = false;
+        for ($i = 1; $i <= $catRows; $i++) {
+            $needReprint = $needReprint || ($rowHeights[$i] <> $rowHeightsReal[$i]);
         }
-        if ($needReprint)
-        {
+        if ($needReprint) {
             $colPos = 0;
             $rowPos = 1;
-            $rowTop= 0;
+            $rowTop = 0;
             $this->pdf->rollbackTransaction(true);
-            $firstRowPos= $this->pdf->getPageHeight() - $this->marginBottom;
-            for ($i=1; $i <= $catRows; $i++)
-            {
-                $firstRowPos-= ($rowHeightsReal[$i]);
+            $firstRowPos = $this->pdf->getPageHeight() - $this->marginBottom;
+            for ($i = 1; $i <= $catRows; $i++) {
+                $firstRowPos -= ($rowHeightsReal[$i]);
             }
             foreach ($this->categories as $category) {
                 $catName = $category["name"];
@@ -481,20 +450,18 @@ class CalendarBuilder {
                 $this->pdf->SetY($firstRowPos + $rowTop);
                 $this->pdf->SetX($this->marginLeft + ($cellWidth * $colPos));
                 $this->pdf->MultiCell($cellWidth, 1, $catName, 1, 'C', true);
-                $myY= $this->pdf->getY();
+                $myY = $this->pdf->getY();
                 $colPos++;
                 if ($colPos > $catCols - 1) {
                     $colPos = 0;
-                    $rowTop+= $rowHeightsReal[$rowPos];
+                    $rowTop += $rowHeightsReal[$rowPos];
                     $rowPos++;
                 }
             }
-            $this->legendHeight= $rowTop+$this->legendSpacing;
-        }
-        else
-        {
+            $this->legendHeight = $rowTop + $this->legendSpacing;
+        } else {
             $this->pdf->commitTransaction();
-            $this->legendHeight= $rowTop+$this->legendSpacing;
+            $this->legendHeight = $rowTop + $this->legendSpacing;
         }
         $this->pdf->setY($origY);
     }
@@ -578,18 +545,17 @@ class CalendarBuilder {
      * @param bool $shrinkFontSizeIfNeeded
      * @return void
      */
-    public function setShrinkFontSizeIfNeeded(bool $shrinkFontSizeIfNeeded ) : void
-    {
-        $this->shrinkFontSizeIfNeeded= $shrinkFontSizeIfNeeded ;
+    public function setShrinkFontSizeIfNeeded(bool $shrinkFontSizeIfNeeded): void {
+        $this->shrinkFontSizeIfNeeded = $shrinkFontSizeIfNeeded;
     }
-    
+
     /**
      * 
      * @param bool $printEndTime Do we print the end time of the entries?
      * @return void
      */
     public function setPrintEndTime(bool $printEndTime): void {
-        $this->printEndTime= $printEndTime;
+        $this->printEndTime = $printEndTime;
     }
 
     /**
@@ -599,35 +565,33 @@ class CalendarBuilder {
      * 
      * @return bool true when everything OK
      */
-    protected function checkContentInsideDayBoxes():bool
-    {
+    protected function checkContentInsideDayBoxes(): bool {
         $day = 1;
         $rowHeights;
         $weekday_of_first = ($this->date["wday"] + 7 - $this->weekStarts) % 7;
         $num_of_rows = ceil(($this->days_in_month + $weekday_of_first) / 7.0);
         for ($i = 1; $i <= $num_of_rows; $i++) {
-            $rowHeights[$i]= 0.0; // Max height of row as for now
+            $rowHeights[$i] = 0.0; // Max height of row as for now
             for ($j = 0; $j < 7; $j++) {
                 if (($i == 1 && $weekday_of_first <= $j) || ($i > 1 && $day <= $this->days_in_month)) {
-                    $contentHeight= $this->dayEntries[$day - 1]["Y"]- $this->dayEntries[$day - 1]["StartY"];
-                    if ($contentHeight == 0)
-                    {
-                        $contentHeight= $this->numberFontSize;
+                    $contentHeight = $this->dayEntries[$day - 1]["Y"] - $this->dayEntries[$day - 1]["StartY"];
+                    if ($contentHeight == 0) {
+                        $contentHeight = $this->numberFontSize;
                     }
-                    $rowHeights[$i]= max($rowHeights[$i], $contentHeight);
+                    $rowHeights[$i] = max($rowHeights[$i], $contentHeight);
                     $day++;
                 }
             }
         }
-        $hasBoxOverflow= false;
-        $totalHeight= 0;
+        $hasBoxOverflow = false;
+        $totalHeight = 0;
         for ($i = 1; $i <= $num_of_rows; $i++) {
-            $hasBoxOverflow= $hasBoxOverflow || ($rowHeights[$i] > $this->rowHeights[$i]);
-            $totalHeight+= $rowHeights[$i];
+            $hasBoxOverflow = $hasBoxOverflow || ($rowHeights[$i] > $this->rowHeights[$i]);
+            $totalHeight += $rowHeights[$i];
         }
         return !$hasBoxOverflow;
     }
-    
+
     /**
      * Check if all enries are in the correct row/heigth
      * If some entries overflow the day box, we try to adjust the row
@@ -635,62 +599,52 @@ class CalendarBuilder {
      * 
      * @return array with the final row heights to use, or null when OK or no chance to do it
      */
-    protected function checkRowHeights():?array
-    {
+    protected function checkRowHeights(): ?array {
         $day = 1;
         $rowHeights;
         $weekday_of_first = ($this->date["wday"] + 7 - $this->weekStarts) % 7;
         $num_of_rows = ceil(($this->days_in_month + $weekday_of_first) / 7.0);
         for ($i = 1; $i <= $num_of_rows; $i++) {
-            $rowHeights[$i]= 0.0; // Max height of row as for now
+            $rowHeights[$i] = 0.0; // Max height of row as for now
             for ($j = 0; $j < 7; $j++) {
                 if (($i == 1 && $weekday_of_first <= $j) || ($i > 1 && $day <= $this->days_in_month)) {
-                    $contentHeight= $this->dayEntries[$day - 1]["Y"]- $this->dayEntries[$day - 1]["StartY"];
-                    if ($contentHeight == 0)
-                    {
-                        $contentHeight= $this->numberFontSize*0.5;
+                    $contentHeight = $this->dayEntries[$day - 1]["Y"] - $this->dayEntries[$day - 1]["StartY"];
+                    if ($contentHeight == 0) {
+                        $contentHeight = $this->numberFontSize * 0.5;
                     }
-                    $rowHeights[$i]= max($rowHeights[$i], $contentHeight);
+                    $rowHeights[$i] = max($rowHeights[$i], $contentHeight);
                     $day++;
                 }
             }
         }
-        $originRowHeight= $this->gridHeight / $num_of_rows;
-        $hasBoxOverflow= false;
-        $totalHeight= 0;
-        foreach ($rowHeights as $rh)
-        {
-            $hasBoxOverflow= $hasBoxOverflow || ($rh > $originRowHeight);
-            $totalHeight+= $rh;
+        $originRowHeight = $this->gridHeight / $num_of_rows;
+        $hasBoxOverflow = false;
+        $totalHeight = 0;
+        foreach ($rowHeights as $rh) {
+            $hasBoxOverflow = $hasBoxOverflow || ($rh > $originRowHeight);
+            $totalHeight += $rh;
         }
-        if ($hasBoxOverflow)
-        {
-            if ($this->gridHeight >= $totalHeight)
-            {
+        if ($hasBoxOverflow) {
+            if ($this->gridHeight >= $totalHeight) {
                 // We can adapt row heights so everything fits into one page
-                $spaceToDistribute= $this->gridHeight- $totalHeight;
-                $expandHeight= $spaceToDistribute / $num_of_rows;
-                for ($i= 1; $i <= $num_of_rows; $i++)
-                {
-                    $rowHeights[$i]+= $expandHeight;
+                $spaceToDistribute = $this->gridHeight - $totalHeight;
+                $expandHeight = $spaceToDistribute / $num_of_rows;
+                for ($i = 1; $i <= $num_of_rows; $i++) {
+                    $rowHeights[$i] += $expandHeight;
                 }
                 return $rowHeights;
-            }
-            else
-            {
+            } else {
                 // No chance still too height
                 return null;
             }
-        }
-        else
-        {
+        } else {
             // No need to adapt row heights
             return null;
         }
     }
-    
-    public function getPageWidth():float
-    {
+
+    public function getPageWidth(): float {
         return $this->pdf->getPageWidth();
     }
+
 }

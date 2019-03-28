@@ -1,6 +1,6 @@
 <?php
 
-namespace PDFCalendarBuilder;
+namespace aschild\PDFCalendarBuilder;
 
 class ExampleTest extends \Codeception\Test\Unit {
 

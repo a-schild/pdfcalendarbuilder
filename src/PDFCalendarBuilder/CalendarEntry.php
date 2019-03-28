@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 
-namespace PDFCalendarBuilder;
+namespace aschild\PDFCalendarBuilder;
 
 /**
  * Description of CalendarEntry
@@ -18,11 +18,11 @@ class CalendarEntry {
     private $textColor;
     private $bgColor;
     
-    function __construct(int $day, \DateTime $startDate, ?\DateTime $endDate,
+    function __construct(\DateTime $startDate, ?\DateTime $endDate,
             string $message, array $textColor,
             array $bgColor)
     {
-        $this->day= $day;
+        $this->day= $startDate->format("d");
         $this->startDate= $startDate;
         $this->endDate= $endDate;
         $this->message= $message;
