@@ -14,7 +14,7 @@ See setShrinkFontSizeIfNeeded(true/false);
 ```
 $cal = new PDFCalendarBuilder\CalendarBuilder(1, 2019, "Calendar title", true, 'mm', 'A4');
 $cal->startPDF();
-$cal->addEntry(10, $startDate, $endDate, "Entry 1", "#000000", "#fffff");
+$cal->addEntry($startDate, $endDate, "Entry 1", "#000000", "#fffff");
 $cal->buildCalendar();
 $cal->Output("calendar.pdf", "I");
 ```
