@@ -27,7 +27,7 @@ $cal->Output("calendar.pdf", "I");
 - Resize row heights to adapt space usage
   ![Resize rows height](doc/img/calendar-resize-row2.png)
 - Resize row heights and shrink font size if needed
-  ![Resize rows and shrink font](calendar-resize-rows-shrink-fontsize.png )
+  ![Resize rows and shrink font](doc/img/calendar-resize-rows-shrink-fontsize.png )
 
 (C) 2019 A.Schild
 
