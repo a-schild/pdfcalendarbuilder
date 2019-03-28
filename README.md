@@ -10,7 +10,7 @@ See setResizeRowHeightsIfNeeded(true/false);
 - If this is not enough, it can reduce the font size until everything fits on one page.
 See setShrinkFontSizeIfNeeded(true/false);
 
-##Usage:
+## Usage:
 ```
 $cal = new PDFCalendarBuilder\CalendarBuilder(1, 2019, "Calendar title", true, 'mm', 'A4');
 $cal->startPDF();
@@ -19,10 +19,14 @@ $cal->buildCalendar();
 $cal->Output("calendar.pdf", "I");
 ```
 
-##Examples
-- ![Empty calendar ](doc/img/calendar-empty.png)
-- ![Box overflow in normal calendars](doc/img/calendar-overflow.png)
-- ![Resize rows height](doc/img/calendar-resize-row2.png)
-- ![Resize rows and schrink font]calendar-resize-rows-shrink-fontsize.png)
+## Examples
+- Empty calendar
+  ![Empty calendar ](doc/img/calendar-empty.png)
+- Overflowing boxes in normal libraries
+  ![Box overflow in normal calendars](doc/img/calendar-overflow.png)
+- Resize row heights to adapt space usage
+  ![Resize rows height](doc/img/calendar-resize-row2.png)
+- Resize row heights and shrink font size if needed
+  ![Resize rows and schrink font](calendar-resize-rows-shrink-fontsize.png)
 
 
