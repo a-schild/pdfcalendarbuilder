@@ -327,7 +327,7 @@ class CalendarBuilder {
                 } else {
                     if ($this->shrinkFontSizeIfNeeded) {
                         $this->pdf->startTransaction();  // We do a rollback if needed to change row heights
-                        $this->fontSize = $this->eventFontSize * $this->shrinkFontSizeFactor;
+                        $this->eventFontSize = $this->eventFontSize * $this->shrinkFontSizeFactor;
                         $this->drawGridWithEntries(null);
                     } else {
                         // No way to fit on page
