@@ -251,4 +251,42 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
         \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
     }
 
+    public function testResizeRowsAndShrinkFontSizeDaySpanners() {
+        $outFile = codecept_output_dir() . "ResizeRowAndShrinkFontSizeDaySpanners.pdf";
+        if (file_exists($outFile)) {
+            unlink($outFile);
+        }
+
+        $cal = new CalendarBuilder(1, 2019, "Resize rows and shrink font size", true, 'mm', "A4");
+        $cal->setPrintEndTime(true);
+        $cal->setResizeRowHeightsIfNeeded(true);
+        $cal->setShrinkFontSizeIfNeeded(true);
+        $cal->startPDF();
+
+        $hours = array(2, 4, 8, 12, 16);
+        foreach ($hours as $hour) {
+            $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 $hour:00:00");
+            $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-18 $hour:15:00");
+            $cal->addEntry($startDate, $endDate, "Entry with very long long long long text", "black", "yellow");
+        }
+
+        $days = array(2, 9, 16, 23, 30);
+        foreach ($days as $day) {
+            $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 11:00:00");
+            $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 12:00:00");
+            $cal->addEntry($startDate, $endDate, "Only hours", "white", "red");
+            $startDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 11:15:00");
+            $endDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 12:30:00");
+            $cal->addEntry($startDate2, $endDate2, "With minutes", "white", "blue");
+            $startDate3 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 13:15:00");
+            $endDate3 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 13:30:00");
+            $cal->addEntry($startDate3, $endDate3, "With minutes", "white", "blue");
+            $startDate4 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 14:15:00");
+            $endDate4 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 14:30:00");
+            $cal->addEntry($startDate4, $endDate4, "With minutes", "white", "blue");
+        }
+        $cal->buildCalendar();
+        $cal->Output($outFile, "F");
+        \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
+    }
 }
