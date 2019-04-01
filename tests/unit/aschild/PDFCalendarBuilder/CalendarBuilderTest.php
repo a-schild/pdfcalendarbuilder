@@ -55,7 +55,7 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
         $cal->startPDF();
         $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 11:00:00");
         $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 12:00:00");
-        $cal->addEntry($startDate, $endDate, "Only houres", "white", "red");
+        $cal->addEntry($startDate, $endDate, "Only hours", "white", "red");
         $cal->buildCalendar();
         $cal->Output($outFile, "F");
         \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
@@ -72,7 +72,7 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
         $cal->startPDF();
         $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 11:30:00");
         $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 12:30:00");
-        $cal->addEntry($startDate, $endDate, "Only houres", "white", "red");
+        $cal->addEntry($startDate, $endDate, "Only hours", "white", "red");
         $startDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 11:15:00");
         $endDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 12:30:00");
         $cal->addEntry($startDate2, $endDate2, "With minutes", "white", "blue");
@@ -94,7 +94,7 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
         $cal->startPDF();
         $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 11:00:00");
         $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 12:00:00");
-        $cal->addEntry($startDate, $endDate, "Only houres long text", "white", "red");
+        $cal->addEntry($startDate, $endDate, "Only hours long text", "white", "red");
         $startDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 11:00:00");
         $endDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 12:10:00");
         $cal->addEntry($startDate2, $endDate2, "With minutes long text", "white", "blue");
@@ -132,7 +132,7 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
         foreach ($days as $day) {
             $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 11:00:00");
             $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 12:00:00");
-            $cal->addEntry($startDate, $endDate, "Only houres", "white", "red");
+            $cal->addEntry($startDate, $endDate, "Only hours", "white", "red");
             $startDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 11:15:00");
             $endDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 12:30:00");
             $cal->addEntry($startDate2, $endDate2, "With minutes", "white", "blue");
@@ -171,7 +171,7 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
         foreach ($days as $day) {
             $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 11:00:00");
             $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 12:00:00");
-            $cal->addEntry($startDate, $endDate, "Only houres", "white", "red");
+            $cal->addEntry($startDate, $endDate, "Only hours", "white", "red");
             $startDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 11:15:00");
             $endDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 12:30:00");
             $cal->addEntry($startDate2, $endDate2, "With minutes", "white", "blue");
@@ -210,7 +210,7 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
         foreach ($days as $day) {
             $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 11:00:00");
             $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 12:00:00");
-            $cal->addEntry($startDate, $endDate, "Only houres", "white", "red");
+            $cal->addEntry($startDate, $endDate, "Only hours", "white", "red");
             $startDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 11:15:00");
             $endDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 12:30:00");
             $cal->addEntry($startDate2, $endDate2, "With minutes", "white", "blue");
@@ -242,7 +242,7 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
         
         $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 11:30:00");
         $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 12:30:00");
-        $cal->addEntryCategory($startDate, $endDate, "Only houres", "IDby");
+        $cal->addEntryCategory($startDate, $endDate, "Only hours", "IDby");
         $startDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 11:15:00");
         $endDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 12:30:00");
         $cal->addEntryCategory($startDate2, $endDate2, "With minutes", "IDyb");
