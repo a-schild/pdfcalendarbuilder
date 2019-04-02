@@ -18,13 +18,28 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
     }
 
     // tests
-    public function testEmptyCalendar() {
-        $outFile = codecept_output_dir() . "EmptyCalendar.pdf";
+    public function testEmptyCalendarUS() {
+        $outFile = codecept_output_dir() . "EmptyCalendar_US.pdf";
         if (file_exists($outFile)) {
             unlink($outFile);
         }
 
         $cal = new CalendarBuilder(1, 2019, "Title", true, 'mm', "A4");
+        $cal->setWeekStarts(0); //US
+        $cal->startPDF();
+        $cal->buildCalendar();
+        $cal->Output($outFile, "F");
+        \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
+    }
+
+    public function testEmptyCalendarEU() {
+        $outFile = codecept_output_dir() . "EmptyCalendar_EU.pdf";
+        if (file_exists($outFile)) {
+            unlink($outFile);
+        }
+
+        $cal = new CalendarBuilder(1, 2019, "Title", true, 'mm', "A4");
+        $cal->setWeekStarts(1); //EU
         $cal->startPDF();
         $cal->buildCalendar();
         $cal->Output($outFile, "F");

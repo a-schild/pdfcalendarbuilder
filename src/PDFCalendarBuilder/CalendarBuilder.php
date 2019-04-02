@@ -114,9 +114,6 @@ class CalendarBuilder {
         for ($day = 0; $day < $this->days_in_month; $day++) {
             $this->dayEntries[$day]["entries"] = [];
         }
-
-        $this->weekday_of_first = ($this->date["wday"] + 7 - $this->weekStarts) % 7;
-        $this->num_of_rows = ceil(($this->days_in_month + $this->weekday_of_first) / 7.0);
     }
 
     public function startPDF() {
@@ -131,6 +128,8 @@ class CalendarBuilder {
         $this->pdf->setLeftMargin($this->marginLeft);
         $this->pdf->setTopMargin($this->marginTop);
         //$this->pdf->setBottomMargin(0);
+        $this->weekday_of_first = ($this->date["wday"] + 7 - $this->weekStarts) % 7;
+        $this->num_of_rows = ceil(($this->days_in_month + $this->weekday_of_first) / 7.0);
         
         $this->pdf->SetAutoPageBreak(false);
         $this->pdf->AddPage();
