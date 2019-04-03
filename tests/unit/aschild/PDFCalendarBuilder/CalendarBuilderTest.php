@@ -118,7 +118,7 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
             unlink($outFile);
         }
 
-        $cal = new CalendarBuilder(1, 2019, "Row of 6.-12.Jan expands in height", true, 'mm', "A4");
+        $cal = new CalendarBuilder(1, 2019, "ExpandOneRowEntry", true, 'mm', "A4");
         $cal->setPrintEndTime(true);
         $cal->setResizeRowHeightsIfNeeded(true);
         $cal->setShrinkFontSizeIfNeeded(false);
@@ -146,7 +146,7 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
             unlink($outFile);
         }
 
-        $cal = new CalendarBuilder(1, 2019, "Resize rows and shrink font size", true, 'mm', "A4");
+        $cal = new CalendarBuilder(1, 2019, "ResizeRowAndShrinkFontSize", true, 'mm', "A4");
         $cal->setPrintEndTime(true);
         $cal->setResizeRowHeightsIfNeeded(true);
         $cal->setShrinkFontSizeIfNeeded(true);
@@ -179,6 +179,45 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
         \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
     }
 
+    public function testResizeRowsPortrait() {
+        $outFile = codecept_output_dir() . "ResizeRowsPortrait.pdf";
+        if (file_exists($outFile)) {
+            unlink($outFile);
+        }
+
+        $cal = new CalendarBuilder(1, 2019, "ResizeRowsPortrait", false, 'mm', "A4");
+        $cal->setPrintEndTime(true);
+        $cal->setResizeRowHeightsIfNeeded(true);
+        $cal->setShrinkFontSizeIfNeeded(true);
+        $cal->startPDF();
+
+        $hours = array( 4, 8, 12, 16);
+        foreach ($hours as $hour) {
+            $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 $hour:00:00");
+            $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 $hour:15:00");
+            $cal->addEntry($startDate, $endDate, "Entry with very long long long long text", "white", "red");
+        }
+
+        $days = array(2, 9, 16, 23, 30);
+        foreach ($days as $day) {
+            $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 11:00:00");
+            $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 12:00:00");
+            $cal->addEntry($startDate, $endDate, "Only hours", "white", "red");
+            $startDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 11:15:00");
+            $endDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 12:30:00");
+            $cal->addEntry($startDate2, $endDate2, "With minutes", "white", "blue");
+        }
+        $days = array(1, 2, 23, 30);
+        foreach ($days as $day) {
+            $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 11:00:00");
+            $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-$day 12:00:00");
+            $cal->addEntry($startDate, $endDate, "Only hours", "white", "red");
+        }
+        $cal->buildCalendar();
+        $cal->Output($outFile, "F");
+        \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
+    }
+    
     public function testShrinkFontSize() {
         $outFile = codecept_output_dir() . "ShrinkFontSize.pdf";
         if (file_exists($outFile)) {

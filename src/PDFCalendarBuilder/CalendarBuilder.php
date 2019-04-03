@@ -677,12 +677,12 @@ class CalendarBuilder {
      */
     protected function adaptRowHeights(float $gridHeight, float $totalContentHeight, array $oldRowHeights) :array
     {
-        $EPSILON= 0.0001;
+        $EPSILON= 0.0001; // We use this to compare floats
 
-        $minRowHeight= $gridHeight; // smalles height
-        $minRowNumber= 0; // Number of rows with the smalles height
-        $min2RowHeight= $gridHeight; // second smalles height
-        $maxRowHeight= 0; // biggest row height
+        $minRowHeight= $gridHeight; // smallest height
+        $minRowCount= 0; // Number of rows with the smallest height
+        $min2RowHeight= $gridHeight; // second smallest height
+        $maxRowHeight= 0; // largest row height
         foreach($oldRowHeights as $rh)
         {
             $oldMinRowHeight= $minRowHeight;
@@ -690,37 +690,54 @@ class CalendarBuilder {
             if (abs($minRowHeight - $oldMinRowHeight) > $EPSILON)
             {
                 $min2RowHeight= $oldMinRowHeight;
-                $minRowNumber= 1;
+                $minRowCount= 1;
             }
             else
             {
                 if (abs($rh - $minRowHeight ) < $EPSILON)
                 {
-                    $minRowNumber+= 1;
+                    $minRowCount+= 1;
                 }
             }
             $maxRowHeight= max($maxRowHeight, $rh);
         }
         $spaceToDistribute = $gridHeight - $totalContentHeight;
-        $minExpandHeight = $spaceToDistribute / $minRowNumber;
+        $maxExpand= ($min2RowHeight - $minRowHeight)*$minRowCount;        
+        $minExpandHeight = $spaceToDistribute / $minRowCount;
+        $minExpand2= min($maxExpand, $minExpandHeight);
         for ($i = 1; $i <= $this->num_of_rows; $i++) {
             if (abs($oldRowHeights[$i] - $minRowHeight) < $EPSILON)
             {
-                $newRowHeights[$i] = $oldRowHeights[$i]+$minExpandHeight;
+                $newRowHeights[$i] = $oldRowHeights[$i]+$minExpand2;
             }
             else {
                 $newRowHeights[$i] = $oldRowHeights[$i];
             }
         }
-
+        $newTotalContentHeight= 0;
+        foreach ($newRowHeights as $rh) {
+            $newTotalContentHeight += $rh;
+        }
+        if (abs($newTotalContentHeight - $gridHeight) > $EPSILON)
+        {
+            // Recursive call
+            $newRowHeights= $this->adaptRowHeights($gridHeight, $newTotalContentHeight, $newRowHeights);
+        }
         return $newRowHeights;
     }
 
+    /**
+     * Return the width of the ouput pdf
+     * The startPDF method must already have been called
+     * 
+     * @return float
+     */
     public function getPageWidth(): float {
         return $this->pdf->getPageWidth();
     }
 
     /**
+     * Default is: title - monthName Year
      * 
      * @return string title to be printed on top of the calendar
      */
@@ -774,6 +791,14 @@ class CalendarBuilder {
         }
     }
 
+    /**
+     * This method generates the text of the calendar entry
+     * If the entry is spanning to the next day, we add ... after the message
+     * If the entry is spanning from the previous day, we add ... in fron tof the message
+     * 
+     * @param \aschild\PDFCalendarBuilder\CalendarEntry $calEntry
+     * @return string
+     */
     protected function adaptNextDayMessage(CalendarEntry $calEntry):string
     {
         $msg= $calEntry->getMessage();
@@ -791,6 +816,12 @@ class CalendarBuilder {
         }
     }
 
+    /**
+     * Sort calendar entries by start time.
+     * All day spanning events are sorted on top
+     * 
+     * @return void
+     */
     protected function sortEntries():void
     {
         for ($day = 0; $day < $this->days_in_month; $day++) {
