@@ -16,7 +16,7 @@ In your composer.json add the dependency:
 ```
     "require": {
         "php": "^7.3",
-        "a-schild/pdfcalendarbuilder": ">=1.0.2",
+        "a-schild/pdfcalendarbuilder": ">=1.0.3",
     }
 ```
 ### Creating the class and generate calendar
