@@ -11,6 +11,15 @@ See setResizeRowHeightsIfNeeded(true/false);
 See setShrinkFontSizeIfNeeded(true/false);
 
 ## Usage:
+In your composer.json add the dependency:
+
+```
+    "require": {
+        "php": "^7.3",
+        "a-schild/pdfcalendarbuilder": ">=1.0.2",
+    }
+```
+### Creating the class and generate calendar
 ```
 $cal = new aschild\PDFCalendarBuilder\CalendarBuilder(1, 2019, "Calendar title", true, 'mm', 'A4');
 $cal->startPDF();
