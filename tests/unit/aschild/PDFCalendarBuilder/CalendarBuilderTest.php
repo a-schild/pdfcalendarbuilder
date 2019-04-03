@@ -76,6 +76,22 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
         \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
     }
 
+    public function testCalendar1EntryPortrait() {
+        $outFile = codecept_output_dir() . "Calendar1EntryPortrait.pdf";
+        if (file_exists($outFile)) {
+            unlink($outFile);
+        }
+
+        $cal = new CalendarBuilder(1, 2019, "Title", false, 'mm', "A4");
+        $cal->startPDF();
+        $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 11:00:00");
+        $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 12:00:00");
+        $cal->addEntry($startDate, $endDate, "Only hours", "white", "red");
+        $cal->buildCalendar();
+        $cal->Output($outFile, "F");
+        \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
+    }
+
     public function testCalendar2Entry() {
         $outFile = codecept_output_dir() . "Calendar2Entry.pdf";
         if (file_exists($outFile)) {
