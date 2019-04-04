@@ -678,7 +678,7 @@ class CalendarBuilder {
     protected function adaptRowHeights(float $gridHeight, float $totalContentHeight, array $oldRowHeights) :array
     {
         $EPSILON= 0.0001; // We use this to compare floats
-
+        error_log("Adapt row heights with $gridHeight $totalContentHeight for $this->title");
         $minRowHeight= $gridHeight; // smallest height
         $minRowCount= 0; // Number of rows with the smallest height
         $min2RowHeight= $gridHeight; // second smallest height
@@ -698,11 +698,15 @@ class CalendarBuilder {
                 {
                     $minRowCount+= 1;
                 }
+                else if ($min2RowHeight > $rh )
+                {
+                    $min2RowHeight= $rh;
+                }
             }
             $maxRowHeight= max($maxRowHeight, $rh);
         }
         $spaceToDistribute = $gridHeight - $totalContentHeight;
-        $maxExpand= ($min2RowHeight - $minRowHeight)*$minRowCount;        
+        $maxExpand= ($min2RowHeight - $minRowHeight);
         $minExpandHeight = $spaceToDistribute / $minRowCount;
         $minExpand2= min($maxExpand, $minExpandHeight);
         for ($i = 1; $i <= $this->num_of_rows; $i++) {
@@ -720,8 +724,13 @@ class CalendarBuilder {
         }
         if (abs($newTotalContentHeight - $gridHeight) > $EPSILON)
         {
+            error_log("Recursive call $newTotalContentHeight $gridHeight for $this->title");
             // Recursive call
             $newRowHeights= $this->adaptRowHeights($gridHeight, $newTotalContentHeight, $newRowHeights);
+        }
+        else
+        {
+            error_log("NO Recursive call $newTotalContentHeight $gridHeight for $this->title");
         }
         return $newRowHeights;
     }
