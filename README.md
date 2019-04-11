@@ -2,7 +2,7 @@
 Generate pdf month calendars with autoscaling/sizing
 
 ## Unique features
-- The class cann tyr to put everything on one page
+- The class can try to put everything on one page
 - In an normal calendar, all rows have the same height
 - This library can shrink/expand rows, so everything fits on one page.
 See setResizeRowHeightsIfNeeded(true/false);
@@ -16,7 +16,7 @@ In your composer.json add the dependency:
 ```
     "require": {
         "php": "^7.3",
-        "a-schild/pdfcalendarbuilder": ">=1.0.4",
+        "a-schild/pdfcalendarbuilder": ">=1.0.5",
     }
 ```
 ### Creating the class and generate calendar

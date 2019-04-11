@@ -63,4 +63,25 @@ class CalendarBuilderDaySpannersTest extends \Codeception\Test\Unit {
         $cal->Output($outFile, "F");
         \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
     }
+
+    public function testCalendarSpanner3Entry() {
+        $outFile = codecept_output_dir() . "CalendarEntryDaySpanner3.pdf";
+        if (file_exists($outFile)) {
+            unlink($outFile);
+        }
+
+        $cal = new CalendarBuilder(1, 2019, "Spanning from prev month", true, 'mm', "A4");
+        $cal->setPrintEndTime(true);
+        $cal->startPDF();
+        $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2018-12-25 11:30:00");
+        $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-4 12:30:00");
+        $cal->addEntry($startDate, $endDate, "From prev month", "white", "red");
+        $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-28 11:30:00");
+        $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-02-2 12:30:00");
+        $cal->addEntry($startDate, $endDate, "Until 2019-02-02", "white", "blue");
+        $cal->buildCalendar();
+        $cal->Output($outFile, "F");
+        \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
+    }
+    
 }

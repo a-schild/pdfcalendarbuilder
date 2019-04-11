@@ -63,6 +63,7 @@ class CalendarBuilder {
         'December');
     private $gridIsDrawn = false; // Is the grid drawn?
     private $dayEntries = array(); // Array containing the XY position of each day, the y value is incremented as entries are added to the calendar
+    private $prevMonthEntries= array(); // Array holding the entries which start on a previous month
     private $rowHeights = array(); // Array holding the row heights of the last grid drawn
     protected $cellWidth;
     protected $gridHeight;  // Height of grid in unit
@@ -228,8 +229,15 @@ class CalendarBuilder {
 
     protected function storeFullEntry(CalendarEntry $ce): void {
 
-        $day= $ce->getStartDate()->format("d");
-        array_push($this->dayEntries[$day - 1]["entries"], $ce);
+        if ($ce->getStartDate()->format("m") != $this->month || $ce->getStartDate()->format("Y") != $this->year)
+        {
+            array_push($this->prevMonthEntries, $ce);
+        }
+        else
+        {
+            $day= $ce->getStartDate()->format("d");
+            array_push($this->dayEntries[$day - 1]["entries"], $ce);
+        }
     }
 
     /**
@@ -758,6 +766,34 @@ class CalendarBuilder {
     protected function expandDaySpanners()
     {
         $toAddEntries= array();
+        // First add all entries which start before the calendar start date
+        foreach ($this->prevMonthEntries as $entry) {
+            if($entry ->isSpanningDays())
+            {
+                $entry->setHideEndTime(true);
+                $nextDayStart= clone $entry->getStartDate();
+                $nextDayStart= $nextDayStart->add(new \DateInterval("P1D"))->setTime(0,0,0);
+                while ($nextDayStart < $entry->getEndDate())
+                {
+                    if ($nextDayStart->format("m") == $this->month && $nextDayStart->format("Y") == $this->year)
+                    {
+                        $newEntry= new CalendarEntry(clone $nextDayStart,
+                            clone $entry->getEndDate(), $entry->getMessage(),
+                            $entry->getTextColor(), $entry->getBackgroundColor());
+                        $newEntry->setHideStartTime(true);
+                        $newEntry->setOriginalEntryStartDate($entry->getStartDate());
+                        array_push($toAddEntries, $newEntry);
+                    }
+                    $nextDayStart= $nextDayStart->add(new \DateInterval("P1D"));
+                }
+                $entry->getEndDate()->setTime(0,0,0);
+            }
+            else
+            {
+                // OK, single day entry
+            }
+        }
+        // Now check the normal inside-month entries
         foreach ($this->dayEntries as $days) {
             foreach ($days["entries"] as $entry) {
                 if($entry ->isSpanningDays())
