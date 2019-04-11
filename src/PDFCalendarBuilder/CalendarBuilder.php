@@ -71,17 +71,17 @@ class CalendarBuilder {
     protected $num_of_rows; // Num of rows in grid
     protected $fontSize;
     protected $fontHeight;
-    private $titleFont = 'helvetica';
+    private $titleFont = 'freesans';
     private $titleFontSize = 20;
-    private $headerFont = 'helvetica';
+    private $headerFont = 'freesans';
     private $headerFontSize = 12;
-    private $numberFont = 'helvetica';
+    private $numberFont = 'freesans';
     private $numberFontSize = 20;
-    private $eventFont = 'helvetica';
+    private $eventFont = 'freesans';
     private $eventFontSize = 10;
-    private $categoryFont = 'helvetica';
+    private $categoryFont = 'freesans';
     private $categoryFontSize = 10;
-    private $footerFont = 'helvetica';
+    private $footerFont = 'freesans';
     private $footerFontSize = 8;
     private $shrinkFontSizeFactor = 0.95; // Reduce the font size by 10% and try once more
     private $weekday_of_first;
@@ -124,7 +124,8 @@ class CalendarBuilder {
         $this->pdf->setPrintFooter(false);
         $this->pdf->setTitle($this->getTitle($this->title));
         // set default monospaced font
-        $this->pdf->SetDefaultMonospacedFont('helvetica');
+        $this->pdf->setFont($this->titleFont);
+        $this->pdf->SetDefaultMonospacedFont($this->titleFont);
         $this->pdf->setRightMargin($this->marginRight);
         $this->pdf->setLeftMargin($this->marginLeft);
         $this->pdf->setTopMargin($this->marginTop);
