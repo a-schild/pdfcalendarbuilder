@@ -1,7 +1,7 @@
 # PDFCalendarBuilder
 Generate pdf month calendars with autoscaling/sizing
 
-With the addMonth() introduced in 1.0.7 you can generate a PDF containing
+With the addMonth() introduced in 1.0.8 you can generate a PDF containing
 multiple months. Each month will be on it's own page then.
 
 ## Unique features
@@ -19,7 +19,7 @@ In your composer.json add the dependency:
 ```
     "require": {
         "php": "^7.3",
-        "a-schild/pdfcalendarbuilder": ">=1.0.7",
+        "a-schild/pdfcalendarbuilder": ">=1.0.8",
     }
 ```
 ### Creating the class and generate calendar

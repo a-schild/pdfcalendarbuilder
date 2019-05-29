@@ -496,4 +496,35 @@ class CalendarBuilderMultiMonthTest extends \Codeception\Test\Unit {
         $cal->Output($outFile, "F");
         \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
     }
+    
+    public function testCalendar12Entry() {
+        $outFile = codecept_output_dir() . "Calendar1Entry-12Months.pdf";
+        if (file_exists($outFile)) {
+            unlink($outFile);
+        }
+
+        $cal = new CalendarBuilder(1, 2019, "Title", true, 'mm', "A4");
+        $cal->startPDF();
+        $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 11:00:00");
+        $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 12:00:00");
+        $cal->addEntry($startDate, $endDate, "Only hours", "white", "red");
+        $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-11 11:00:00");
+        $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-11 12:00:00");
+        $cal->addEntry($startDate, $endDate, "Only hours", "white", "blue");
+        $cal->buildCalendar();
+        for ($i=2 ; $i <= 12; $i++)
+        {
+            $cal->addMonth($i, 2019, "Title");
+            $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-".$i."-10 11:00:00");
+            $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-".$i."-10 12:00:00");
+            $cal->addEntry($startDate, $endDate, "Only hours", "white", "red");
+            $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-".$i."-11 11:00:00");
+            $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-".$i."-11 12:00:00");
+            $cal->addEntry($startDate, $endDate, "Only hours", "white", "blue");
+            $cal->buildCalendar();
+        }
+        $cal->Output($outFile, "F");
+        \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
+    }
+    
 }

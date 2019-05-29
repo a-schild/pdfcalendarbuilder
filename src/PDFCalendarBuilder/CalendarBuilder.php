@@ -79,6 +79,7 @@ class CalendarBuilder {
     private $numberFontSize = 20;
     private $eventFont = 'freesans';
     private $eventFontSize = 10;
+    private $currentEventFontSize = 10;
     private $categoryFont = 'freesans';
     private $categoryFontSize = 10;
     private $footerFont = 'freesans';
@@ -181,7 +182,7 @@ class CalendarBuilder {
      */
     protected function drawGrid(?array $rowHeights) {
 
-        $this->fontSize = $this->eventFontSize;
+        $this->fontSize = $this->currentEventFontSize;
         $this->fontHeight = 1;
 
         $this->pdf->SetFillColor(255, 255, 255);
@@ -358,6 +359,7 @@ class CalendarBuilder {
      * Now generate the calendar
      */
     public function buildCalendar() {
+        $this->currentEventFontSize= $this->eventFontSize;
         $this->expandDayspanners(); // Expand entries where start+end date are not on the same day
         $this->sortEntries(); // Sort entries according to start date and day spanning stuff
         $this->pdf->startTransaction();  // We do a rollback if needed to change row heights
@@ -378,7 +380,7 @@ class CalendarBuilder {
                     } else {
                         if ($this->shrinkFontSizeIfNeeded) {
                             $this->pdf->startTransaction();  // We do a rollback if needed to change row heights
-                            $this->eventFontSize = $this->eventFontSize * $this->shrinkFontSizeFactor;
+                            $this->currentEventFontSize = $this->currentEventFontSize * $this->shrinkFontSizeFactor;
                             $this->drawGridWithEntries(null);
                         } else {
                             // No way to fit on page
@@ -389,7 +391,7 @@ class CalendarBuilder {
                 } else {
                     if ($this->shrinkFontSizeIfNeeded) {
                         $this->pdf->startTransaction();  // We do a rollback if needed to change row heights
-                        $this->eventFontSize = $this->eventFontSize * $this->shrinkFontSizeFactor;
+                        $this->currentEventFontSize = $this->currentEventFontSize * $this->shrinkFontSizeFactor;
                         $this->drawGridWithEntries(null);
                     } else {
                         // No way to fit on page
