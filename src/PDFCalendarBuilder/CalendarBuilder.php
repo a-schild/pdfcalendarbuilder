@@ -303,7 +303,11 @@ class CalendarBuilder {
         else
         {
             $startDate = $calendarEntry->getStartDate();
-            if ($startDate->format('i') == "00") {
+            if ($startDate->format('G:i') == "0:00")
+            {
+                $txt= "";
+            }
+            elseif ($startDate->format('i') == "00") {
                 $txt = $startDate->format('G');
             } else {
                 $txt = $startDate->format('G:i');
@@ -319,8 +323,8 @@ class CalendarBuilder {
                 }
             }
         }
-        if (!$calendarEntry->isHideStartTime()
-            || ($this->printEndTime && ! $calendarEntry->isHideEndTime()))
+        if (strlen($txt) > 0 && (!$calendarEntry->isHideStartTime()
+            || ($this->printEndTime && ! $calendarEntry->isHideEndTime())))
         {
             $txt .= 'h ';
         }

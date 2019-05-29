@@ -39,6 +39,9 @@ class CalendarBuilderDaySpannersTest extends \Codeception\Test\Unit {
         $startDate4 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-8 11:15:00");
         $endDate4 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-12 12:30:00");
         $cal->addEntry($startDate4, $endDate4, "Entry 4", "yellow", "black");
+        $startDate4 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-8 00:00:00");
+        $endDate4 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-12 12:30:00");
+        $cal->addEntry($startDate4, $endDate4, "Entry 4", "yellow", "black");
         $cal->buildCalendar();
         $cal->Output($outFile, "F");
         \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
