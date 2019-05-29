@@ -140,6 +140,40 @@ class CalendarBuilder {
     }
 
     /**
+     * Add a new month to the PDF
+     * 
+     * @param int $month    Generate calendar for this month
+     * @param int $year     Generate calendar for this year
+     * @param string $title Print this as calendar title
+     * 
+     */
+    function addMonth(int $month, int $year, string $title) {
+        $this->month = $month;
+        $this->year = $year;
+        $this->title = $title;
+        // Build start date of calendar
+        $ts = mktime(0, 0, 0, $month, 1, $year);
+        $this->date = getDate($ts);
+        // Number of days to display in calendar
+        $this->days_in_month = date('t', $ts);
+        $this->dayEntries = array(); // Array containing the XY position of each day, the y value is incremented as entries are added to the calendar
+        $this->prevMonthEntries= array(); // Array holding the entries which start on a previous month
+        // Prepare array for each day
+        for ($day = 0; $day < $this->days_in_month; $day++) {
+            $this->dayEntries[$day]["entries"] = [];
+        }
+        $this->weekday_of_first = ($this->date["wday"] + 7 - $this->weekStarts) % 7;
+        $this->num_of_rows = ceil(($this->days_in_month + $this->weekday_of_first) / 7.0);
+        
+        $this->pdf->AddPage();
+        $this->gridWidth = $this->pdf->getPageWidth() - $this->marginRight - $this->marginLeft;
+        $this->cellWidth = $this->gridWidth / 7;
+        
+        $this->rowHeights = array(); // Array holding the row heights of the last grid drawn
+        $this->gridIsDrawn = false;
+     }
+    
+    /**
      * 
      * Draw the grid with the column headers and the day numbers in the cells
      * 
