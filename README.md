@@ -31,7 +31,7 @@ $cal->buildCalendar();
 $cal->Output("calendar.pdf", "I");
 ```
 
-### Creating the class and generate calendar for 3 months
+### Creating the class and generate calendar for 3 months (Required version 1.0.7 or higher)
 ```
 $cal = new aschild\PDFCalendarBuilder\CalendarBuilder(1, 2019, "Calendar title Jan", true, 'mm', 'A4');
 $cal->startPDF();
