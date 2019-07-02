@@ -189,4 +189,23 @@ class ColorNames
         }
     }
     
+    /**
+     *
+     * @param type $color Color in HTML notation #ddffff or black
+     * @return Color in HTML notation, with(out) #
+     */
+    public static function html2html(string $color, bool $withDash= true): string {
+        $rgb= ColorNames::html2rgb($color);
+        $retVal= dechex($rgb[0]) . dechex($rgb[1]) . dechex($rgb[2]);
+        if ($withDash)
+        {
+            return "#".retVal;
+        }
+        else
+        {
+            return $retVal;
+        }
+    }
+    
+    
 }
