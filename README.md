@@ -35,13 +35,13 @@ $cal->Output("calendar.pdf", "I");
 ```
 $cal = new aschild\PDFCalendarBuilder\CalendarBuilder(1, 2019, "Calendar title Jan", true, 'mm', 'A4');
 $cal->startPDF();
-$cal->addEntry($startDate1, $endDate1, "Entry 1", "#000000", "#fffff");
+$cal->addEntry($startDate1, $endDate1, "Entry 1", "#000000", "#ffffff");
 $cal->buildCalendar();
 $cal->addMonth(2, 2019, "Title for Feb");
-$cal->addEntry($startDate2, $endDate2, "Entry 1", "#000000", "#fffff");
+$cal->addEntry($startDate2, $endDate2, "Entry 1", "#000000", "#ffffff");
 $cal->buildCalendar();
 $cal->addMonth(3, 2019, "Title for March");
-$cal->addEntry($startDate3, $endDate3, "Entry 1", "#000000", "#fffff");
+$cal->addEntry($startDate3, $endDate3, "Entry 1", "#000000", "#ffffff");
 $cal->buildCalendar();
 $cal->Output("calendar.pdf", "I");
 ```
