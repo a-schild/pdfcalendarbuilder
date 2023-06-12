@@ -13,8 +13,8 @@
             "role": "Developer"
         }],
     "require": {
-        "php": "^7.3",
-        "tecnickcom/tcpdf": "^6.2.26"
+        "php": "^8.1",
+        "tecnickcom/tcpdf": "^6.6.2"
     },
     "require-dev": {},
     "autoload": {

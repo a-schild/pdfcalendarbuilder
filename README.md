@@ -18,7 +18,7 @@ In your composer.json add the dependency:
 
 ```
     "require": {
-        "php": "^7.3",
+        "php": "^8.1",
         "a-schild/pdfcalendarbuilder": ">=1.0.10",
     }
 ```
