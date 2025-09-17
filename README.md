@@ -19,7 +19,7 @@ In your composer.json add the dependency:
 ```
     "require": {
         "php": "^8.1",
-        "a-schild/pdfcalendarbuilder": ">=1.0.11",
+        "a-schild/pdfcalendarbuilder": ">=1.0.12",
     }
 ```
 ### Creating the class and generate calendar
@@ -58,5 +58,5 @@ $cal->Output("calendar.pdf", "I");
 - Day spanning events
   ![Events which span days](doc/img/calendar-day-spanning.png)
 
-(C) 2019 A.Schild
+(C) 2019 - 2025 A.Schild
 
