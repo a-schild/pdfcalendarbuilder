@@ -4,9 +4,9 @@
     "description": "PDF month calendar generator",
     "keywords": ["pdf", "calendar"],
     "homepage": "https://github.com/a-schild/pdfcalendarbuilder",
-    "time": "2019-03-27",
+    "time": "2026-01-15",
     "license": "Apache-2.0",
-	"version": "1.0.12",
+	"version": "1.0.13",
     "authors": [
         {
             "name": "André Schild",
@@ -15,8 +15,8 @@
             "role": "Developer"
         }],
     "require": {
-        "php": "^8.1",
-        "tecnickcom/tcpdf": "^6.10.0"
+        "php": "^8.2",
+        "tecnickcom/tcpdf": "^6.10.1"
     },
     "require-dev": {},
     "autoload": {

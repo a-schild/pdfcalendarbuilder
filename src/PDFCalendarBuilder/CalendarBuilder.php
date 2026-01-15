@@ -86,6 +86,7 @@ class CalendarBuilder {
     private $footerFontSize = 8;
     private $shrinkFontSizeFactor = 0.95; // Reduce the font size by 10% and try once more
     private $weekday_of_first;
+    private $categories = array(); // Array holding the categories for legend
 
     /**
      * Create monthly calendar for the given month&year
