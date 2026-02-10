@@ -539,9 +539,15 @@ class CalendarBuilder {
                     $rowPos++;
                 }
             }
+            if ($rowPos <= $catRows) {
+                $rowTop += $rowHeightsReal[$rowPos];
+            }
             $this->legendHeight = $rowTop + $this->legendSpacing;
         } else {
             $this->pdf->commitTransaction();
+            if ($rowPos <= $catRows) {
+                $rowTop += $rowHeightsReal[$rowPos];
+            }
             $this->legendHeight = $rowTop + $this->legendSpacing;
         }
         $this->pdf->setY($origY);
@@ -908,22 +914,22 @@ class CalendarBuilder {
         for ($day = 0; $day < $this->days_in_month; $day++) {
             $entries= $this->dayEntries[$day]["entries"];
             usort($entries,
-                function ($a, $b) : bool {
+                function ($a, $b) : int {
                     if ($a->isContinuationEntry() )
                     {
                         if ($b->isContinuationEntry())
                         {
                             // Check original start dates/times
-                            return $a->getOriginalEntryStartDate()->getTimestamp() > $b->getOriginalEntryStartDate()->getTimestamp();
+                            return $a->getOriginalEntryStartDate()->getTimestamp() <=> $b->getOriginalEntryStartDate()->getTimestamp();
                         }
                         else
                         {
-                            return false;
+                            return -1;
                         }
                     }
                     else
                     {
-                        return $a->getStartDate()->getTimestamp() > $b->getStartDate()->getTimestamp();
+                        return $a->getStartDate()->getTimestamp() <=> $b->getStartDate()->getTimestamp();
                     }
                 });
             $this->dayEntries[$day]["entries"]= $entries;

@@ -196,10 +196,10 @@ class ColorNames
      */
     public static function html2html(string $color, bool $withDash= true): string {
         $rgb= ColorNames::html2rgb($color);
-        $retVal= dechex($rgb[0]) . dechex($rgb[1]) . dechex($rgb[2]);
+        $retVal= sprintf('%02x%02x%02x', $rgb[0], $rgb[1], $rgb[2]);
         if ($withDash)
         {
-            return "#".retVal;
+            return "#".$retVal;
         }
         else
         {
