@@ -15,12 +15,14 @@ composer install
 # Run all unit tests
 ./vendor/bin/codecept run unit
 
-# Run a single test file
-./vendor/bin/codecept run unit aschild/PDFCalendarBuilder/CalendarBuilderTest
+# Run a single test file (use --filter with test method name)
+./vendor/bin/codecept run unit --filter testCalendarCategories
 
-# Run a specific test method
-./vendor/bin/codecept run unit aschild/PDFCalendarBuilder/CalendarBuilderTest:testEmptyCalendar
+# Run all tests matching a pattern
+./vendor/bin/codecept run unit --filter testCalendar
 ```
+
+Note: Codeception's `run unit <path>` syntax does not work for specifying test files directly; use `--filter` instead.
 
 There is no linter or static analysis configured.
 
@@ -48,12 +50,25 @@ The calendar uses a transaction-based layout optimization in `buildCalendar()`:
 
 When an entry spans multiple days, `CalendarBuilder` duplicates the `CalendarEntry` for each day, setting `continuationEntry=true` and controlling time display via `hideStartTime`/`hideEndTime`. Entries starting in the previous month are handled by checking the prior month's days.
 
+### Category Legend
+
+Categories are rendered at the bottom of the page via `printCategories()`. When there are >7 categories, they wrap into multiple rows. The legend uses a two-pass approach: first pass measures actual row heights, second pass redraws all boxes with uniform height per row (vertically centered text).
+
+### Configurable Options
+
+- `setShowFullTime(bool)` — Always display full time format (e.g., "9:00" instead of "9") and use a space separator instead of "h"
+- `overrideGridHeight(float)` — Manually set the grid height instead of auto-calculating, useful when embedding the calendar in a larger PDF layout
+- `setPrintEndTime(bool)` — Show end times on entries
+- `setResizeRowHeightsIfNeeded(bool)` — Allow row height redistribution to fit content
+- `setShrinkFontSizeIfNeeded(bool)` — Allow font size reduction to fit content
+
 ## Key Conventions
 
 - PHP 8.2+ with `declare(strict_types=1)` in all source files
 - PSR-4 autoloading: `aschild\` → `src/`
 - Tests use Codeception (`Codeception\Test\Unit`) with PHPUnit assertions
 - Test output goes to `tests/_output/`
+- Dev dependencies: `codeception/codeception ^5.0`, `codeception/module-asserts ^3.0`
 - Single production dependency: `tecnickcom/tcpdf ^6.10.1`
 - Week start is configurable: 0=Sunday (default), 1=Monday
 - Colors can be specified as named colors (e.g., "red") or HTML hex (e.g., "#ff0000")
