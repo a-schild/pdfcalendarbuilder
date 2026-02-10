@@ -13,13 +13,22 @@ See setResizeRowHeightsIfNeeded(true/false);
 - If this is not enough, it can reduce the font size until everything fits on one page.
 See setShrinkFontSizeIfNeeded(true/false);
 
+## Additional options
+
+- **Full time display**: Show times as `9:00` instead of `9h` with `setShowFullTime(true)`
+- **Custom grid height**: Override the auto-calculated grid height with `overrideGridHeight($height)`, useful when embedding the calendar in a larger PDF layout
+- **End time display**: Show entry end times with `setPrintEndTime(true)`
+- **Categories**: Define categories with `addCategory($id, $name, $textColor, $bgColor)` and assign entries via `addEntryCategory()`. Call `printCategories()` before `buildCalendar()` to render a color legend at the bottom of the page.
+- **Week start**: Set Monday as the first day of the week with `setWeekStarts(1)` (default is 0 for Sunday)
+- **Font sizes**: Customize with `setTitleFontSize()`, `setHeaderFontSize()`, `setNumberFontSize()`, `setEventFontSize()`, `setCategoryFontSize()`
+
 ## Usage:
 In your composer.json add the dependency:
 
 ```
     "require": {
-        "php": "^8.1",
-        "a-schild/pdfcalendarbuilder": ">=1.0.12",
+        "php": "^8.2",
+        "a-schild/pdfcalendarbuilder": ">=1.0.16",
     }
 ```
 ### Creating the class and generate calendar
@@ -58,5 +67,5 @@ $cal->Output("calendar.pdf", "I");
 - Day spanning events
   ![Events which span days](doc/img/calendar-day-spanning.png)
 
-(C) 2019 - 2025 A.Schild
+(C) 2019 - 2026 A.Schild
 
