@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.16 2026-02-10]
+
+### Added
+- `setShowFullTime(bool)` option to always display full time format (e.g. 9:00 instead of 9) without 'h' suffix (from efectn/php-pdf-calendar fork)
+- `overrideGridHeight(float)` option to manually set the grid height, useful when embedding the calendar in a larger PDF layout (from efectn/php-pdf-calendar fork)
+- Tests for showFullTime and overrideGridHeight features
+
+### Changed
+- Nothing
+
+### Fixed
+- Added .claude/ to .gitignore
+
 ## [1.0.15 2026-02-10]
 
 ### Added

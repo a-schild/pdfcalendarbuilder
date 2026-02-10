@@ -35,6 +35,7 @@ class CalendarBuilder {
     private $days_in_month; // The number of days for the calendar
     private $weekStarts = 0;    // On which day does the week start? 0=Sunday, 1=Monday
     private $printEndTime = false; // Do we print the end time of the entries?
+    private $showFullTime = false; // Do we print times fully? (e.g. 9:00 instead of 9)
     private $resizeRowHeightsIfNeeded = true; // Resize the row heights to fitt all entries on one page
     private $shrinkFontSizeIfNeeded = true; // use smaller font for entries unless everything fits on one page
     //private $addAdditionalPagesIfNeeded = true; // Add additional pages when not everything fits on one page
@@ -86,6 +87,7 @@ class CalendarBuilder {
     private $footerFontSize = 8;
     private $shrinkFontSizeFactor = 0.95; // Reduce the font size by 10% and try once more
     private $weekday_of_first;
+    private $overriddenGridHeight = null; // Override the calculated grid height
     private $categories = array(); // Array holding the categories for legend
 
     /**
@@ -205,8 +207,12 @@ class CalendarBuilder {
         $this->pdf->Ln();
         $this->pdf->SetFillColor(128, 128, 128);
         $this->pdf->SetTextColor(0, 0, 0);
-        $bottomPadding = $this->legendHeight > 0 ? 0 : ($this->fontHeight / 2);
-        $this->gridHeight = $this->pdf->getPageHeight() - $this->pdf->GetY() - $this->marginBottom - $this->legendHeight - $bottomPadding;
+        if ($this->overriddenGridHeight !== null) {
+            $this->gridHeight = $this->overriddenGridHeight;
+        } else {
+            $bottomPadding = $this->legendHeight > 0 ? 0 : ($this->fontHeight / 2);
+            $this->gridHeight = $this->pdf->getPageHeight() - $this->pdf->GetY() - $this->marginBottom - $this->legendHeight - $bottomPadding;
+        }
         $cellHeight = ($this->gridHeight) / $this->num_of_rows;
 
         /* Render the grid */
@@ -309,7 +315,7 @@ class CalendarBuilder {
             {
                 $txt= "";
             }
-            elseif ($startDate->format('i') == "00") {
+            elseif ($startDate->format('i') == "00" && !$this->showFullTime) {
                 $txt = $startDate->format('G');
             } else {
                 $txt = $startDate->format('G:i');
@@ -318,7 +324,7 @@ class CalendarBuilder {
         if ($this->printEndTime && ! $calendarEntry->isHideEndTime()) {
             $endDate = $calendarEntry->getEndDate();
             if ($endDate != null) {
-                if ($endDate->format('i') == "00") {
+                if ($endDate->format('i') == "00" && !$this->showFullTime) {
                     $txt .= '-' . $endDate->format('G');
                 } else {
                     $txt .= '-' . $endDate->format('G:i');
@@ -328,7 +334,7 @@ class CalendarBuilder {
         if (strlen($txt) > 0 && (!$calendarEntry->isHideStartTime()
             || ($this->printEndTime && ! $calendarEntry->isHideEndTime())))
         {
-            $txt .= 'h ';
+            $txt .= $this->showFullTime ? ' ' : 'h ';
         }
         $txt.=  $calendarEntry->getMessage();
         $this->pdf->MultiCell($this->cellWidth, 1,
@@ -643,6 +649,27 @@ class CalendarBuilder {
      */
     public function setPrintEndTime(bool $printEndTime): void {
         $this->printEndTime = $printEndTime;
+    }
+
+    /**
+     * Show full time format (e.g. 9:00 instead of 9) and omit the 'h' suffix
+     *
+     * @param bool $showFullTime
+     * @return void
+     */
+    public function setShowFullTime(bool $showFullTime): void {
+        $this->showFullTime = $showFullTime;
+    }
+
+    /**
+     * Override the automatically calculated grid height with a custom value.
+     * Useful when embedding the calendar in a larger PDF layout.
+     *
+     * @param float $height Grid height in the configured unit
+     * @return void
+     */
+    public function overrideGridHeight(float $height): void {
+        $this->overriddenGridHeight = $height;
     }
 
     /**

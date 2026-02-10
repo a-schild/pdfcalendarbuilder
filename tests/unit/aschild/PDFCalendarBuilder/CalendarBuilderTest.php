@@ -369,6 +369,46 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
         \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
     }
 
+    public function testShowFullTime() {
+        $outFile = codecept_output_dir() . "CalendarShowFullTime.pdf";
+        if (file_exists($outFile)) {
+            unlink($outFile);
+        }
+
+        $cal = new CalendarBuilder(1, 2019, "Calendar with full time format", true, 'mm', "A4");
+        $cal->setPrintEndTime(true);
+        $cal->setShowFullTime(true);
+        $cal->startPDF();
+
+        $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 9:00:00");
+        $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 10:00:00");
+        $cal->addEntry($startDate, $endDate, "Full hours entry", "white", "red");
+        $startDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 11:15:00");
+        $endDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 12:30:00");
+        $cal->addEntry($startDate2, $endDate2, "With minutes entry", "white", "blue");
+        $cal->buildCalendar();
+        $cal->Output($outFile, "F");
+        \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
+    }
+
+    public function testOverrideGridHeight() {
+        $outFile = codecept_output_dir() . "CalendarOverrideGridHeight.pdf";
+        if (file_exists($outFile)) {
+            unlink($outFile);
+        }
+
+        $cal = new CalendarBuilder(1, 2019, "Calendar with custom grid height", true, 'mm', "A4");
+        $cal->startPDF();
+        $cal->overrideGridHeight(100);
+
+        $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 11:30:00");
+        $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 12:30:00");
+        $cal->addEntry($startDate, $endDate, "Test entry", "white", "red");
+        $cal->buildCalendar();
+        $cal->Output($outFile, "F");
+        \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
+    }
+
     public function testResizeRowsAndShrinkFontSizeDaySpanners() {
         $outFile = codecept_output_dir() . "ResizeRowAndShrinkFontSizeDaySpanners.pdf";
         if (file_exists($outFile)) {
