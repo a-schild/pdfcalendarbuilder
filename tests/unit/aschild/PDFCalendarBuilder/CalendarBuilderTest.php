@@ -337,6 +337,38 @@ class CalendarBuilderTest extends \Codeception\Test\Unit {
         \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
     }
 
+    public function testCalendarManyCategoriesWithLongNames() {
+        $outFile = codecept_output_dir() . "CalendarManyCategoriesLongNames.pdf";
+        if (file_exists($outFile)) {
+            unlink($outFile);
+        }
+
+        $cal = new CalendarBuilder(1, 2019, "Calendar with many categories", true, 'mm', "A4");
+        $cal->setPrintEndTime(true);
+        $cal->startPDF();
+
+        $cal->addCategory("cat1", "Short", "black", "yellow");
+        $cal->addCategory("cat2", "A very long category name that wraps to two lines", "white", "blue");
+        $cal->addCategory("cat3", "Medium length name", "black", "lime");
+        $cal->addCategory("cat4", "Another long category name for testing", "white", "red");
+        $cal->addCategory("cat5", "Cat five", "black", "orange");
+        $cal->addCategory("cat6", "Sixth category", "white", "purple");
+        $cal->addCategory("cat7", "Seventh", "black", "aqua");
+        $cal->addCategory("cat8", "Eighth category with a really long name", "white", "maroon");
+        $cal->addCategory("cat9", "Ninth", "black", "silver");
+        $cal->printCategories();
+
+        $startDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 11:30:00");
+        $endDate = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-10 12:30:00");
+        $cal->addEntryCategory($startDate, $endDate, "Entry cat1", "cat1");
+        $startDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-15 09:00:00");
+        $endDate2 = \DateTime::createFromFormat("Y-m-d H:i:s", "2019-01-15 10:00:00");
+        $cal->addEntryCategory($startDate2, $endDate2, "Entry cat8", "cat8");
+        $cal->buildCalendar();
+        $cal->Output($outFile, "F");
+        \PHPUnit\Framework\Assert::assertTrue(file_exists($outFile), "Output file missing");
+    }
+
     public function testResizeRowsAndShrinkFontSizeDaySpanners() {
         $outFile = codecept_output_dir() . "ResizeRowAndShrinkFontSizeDaySpanners.pdf";
         if (file_exists($outFile)) {

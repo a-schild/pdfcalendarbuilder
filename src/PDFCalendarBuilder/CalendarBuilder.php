@@ -205,7 +205,8 @@ class CalendarBuilder {
         $this->pdf->Ln();
         $this->pdf->SetFillColor(128, 128, 128);
         $this->pdf->SetTextColor(0, 0, 0);
-        $this->gridHeight = $this->pdf->getPageHeight() - $this->pdf->GetY() - $this->marginBottom - $this->legendHeight - ($this->fontHeight / 2);
+        $bottomPadding = $this->legendHeight > 0 ? 0 : ($this->fontHeight / 2);
+        $this->gridHeight = $this->pdf->getPageHeight() - $this->pdf->GetY() - $this->marginBottom - $this->legendHeight - $bottomPadding;
         $cellHeight = ($this->gridHeight) / $this->num_of_rows;
 
         /* Render the grid */
@@ -530,8 +531,7 @@ class CalendarBuilder {
                 $this->pdf->SetTextColor($rT, $gT, $bT);
                 $this->pdf->SetY($firstRowPos + $rowTop);
                 $this->pdf->SetX($this->marginLeft + ($cellWidth * $colPos));
-                $this->pdf->MultiCell($cellWidth, 1, $catName, 1, 'C', true);
-                $myY = $this->pdf->getY();
+                $this->pdf->MultiCell($cellWidth, $rowHeightsReal[$rowPos], $catName, 1, 'C', true, 1, '', '', true, 0, false, true, $rowHeightsReal[$rowPos], 'M');
                 $colPos++;
                 if ($colPos > $catCols - 1) {
                     $colPos = 0;
