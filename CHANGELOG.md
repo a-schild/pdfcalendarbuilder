@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.15 2026-02-10]
+
+### Added
+- Test dev dependencies (codeception/codeception, codeception/module-asserts)
+- Test for >7 categories with two-line long category names
+
+### Changed
+- Nothing
+
+### Fixed
+- Category legend boxes now have equal heights per row when some category names wrap to two lines
+- Removed white space gap between calendar grid and category legend
+
 ## [1.0.14 2026-02-10]
 
 ### Added
